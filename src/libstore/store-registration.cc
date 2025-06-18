@@ -59,23 +59,21 @@ ref<StoreConfig> resolveStoreConfig(StoreReference && storeURI)
                     return make_ref<LocalStore::Config>(params);
             },
             [&](const StoreReference::Specified & g) {
-                if (std::getenv("NIX_GCS_DEBUG")) {
-                    std::cerr << "=== resolveStoreConfig lookup for scheme '" << g.scheme << "' ===" << std::endl;
-                    std::cerr << "Available stores in registry:" << std::endl;
-                    for (const auto & [storeName, implem] : Implementations::registered()) {
-                        std::cerr << "  Store: '" << storeName << "' Schemes: ";
-                        for (const auto & scheme : implem.uriSchemes) {
-                            std::cerr << "'" << scheme << "' ";
-                        }
-                        std::cerr << std::endl;
-                        std::cerr << "    Contains '" << g.scheme << "'? "
-                                  << (implem.uriSchemes.count(g.scheme) ? "YES" : "NO") << std::endl;
-                    }
-                }
-
                 for (const auto & [storeName, implem] : Implementations::registered())
                     if (implem.uriSchemes.count(g.scheme))
                         return implem.parseConfig(g.scheme, g.authority, params);
+
+                std::cerr << "=== resolveStoreConfig lookup for scheme '" << g.scheme << "' ===" << std::endl;
+                std::cerr << "Available stores in registry:" << std::endl;
+                for (const auto & [storeName, implem] : Implementations::registered()) {
+                    std::cerr << "  Store: '" << storeName << "' Schemes: ";
+                    for (const auto & scheme : implem.uriSchemes) {
+                        std::cerr << "'" << scheme << "' ";
+                    }
+                    std::cerr << std::endl;
+                    std::cerr << "    Contains '" << g.scheme << "'? "
+                              << (implem.uriSchemes.count(g.scheme) ? "YES" : "NO") << std::endl;
+                }
 
                 throw Error("don't know how to open Nix store with scheme '%s'", g.scheme);
             },
