@@ -9,7 +9,14 @@ struct GCSBinaryCacheStoreConfig : std::enable_shared_from_this<GCSBinaryCacheSt
 {
     std::string bucketName;
 
+    // Constructor for actual store creation
     GCSBinaryCacheStoreConfig(std::string_view bucketName, const Params & params);
+
+    // Constructor for URI parsing during registration
+    GCSBinaryCacheStoreConfig(std::string_view uriScheme, std::string_view uri, const Params & params);
+
+    // Constructor for registration system
+    explicit GCSBinaryCacheStoreConfig(const Params & params);
 
     const Setting<std::string> project{this, "", "project", "GCS project ID"};
 

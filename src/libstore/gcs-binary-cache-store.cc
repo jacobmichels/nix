@@ -14,6 +14,36 @@ GCSBinaryCacheStoreConfig::GCSBinaryCacheStoreConfig(std::string_view bucketName
 {
 }
 
+GCSBinaryCacheStoreConfig::GCSBinaryCacheStoreConfig(const Params & params)
+    : GCSBinaryCacheStoreConfig("", params)
+{
+}
+
+GCSBinaryCacheStoreConfig::GCSBinaryCacheStoreConfig(
+    std::string_view uriScheme, std::string_view uri, const Params & params)
+    : StoreConfig(params)
+    , BinaryCacheStoreConfig(params)
+{
+    // Parse the URI to extract bucket name
+    // URI format: gs://bucket-name or gs://bucket-name/path
+    if (uri.starts_with("gs://")) {
+        auto bucketPart = uri.substr(5); // Remove "gs://"
+        auto slashPos = bucketPart.find('/');
+        if (slashPos != std::string::npos) {
+            bucketName = std::string(bucketPart.substr(0, slashPos));
+        } else {
+            bucketName = std::string(bucketPart);
+        }
+    } else {
+        // Fallback: assume the whole URI is the bucket name
+        bucketName = std::string(uri);
+    }
+
+    if (bucketName.empty()) {
+        throw UsageError("GCS store URI must specify a bucket name");
+    }
+}
+
 std::string GCSBinaryCacheStoreConfig::doc()
 {
     return "GCS Binary Cache Store";
