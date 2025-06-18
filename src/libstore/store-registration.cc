@@ -7,17 +7,11 @@ namespace nix {
 
 ref<Store> openStore(const std::string & uri, const Store::Config::Params & extraParams)
 {
-    if (std::getenv("NIX_GCS_DEBUG")) {
-        std::cerr << "=== openStore(string): '" << uri << "' ===" << std::endl;
-    }
     return openStore(StoreReference::parse(uri, extraParams));
 }
 
 ref<Store> openStore(StoreReference && storeURI)
 {
-    if (std::getenv("NIX_GCS_DEBUG")) {
-        std::cerr << "=== openStore(StoreReference): calling resolveStoreConfig ===" << std::endl;
-    }
     auto store = resolveStoreConfig(std::move(storeURI))->openStore();
     store->init();
     return store;
@@ -63,18 +57,6 @@ ref<StoreConfig> resolveStoreConfig(StoreReference && storeURI)
                     if (implem.uriSchemes.count(g.scheme))
                         return implem.parseConfig(g.scheme, g.authority, params);
 
-                std::cerr << "=== resolveStoreConfig lookup for scheme '" << g.scheme << "' ===" << std::endl;
-                std::cerr << "Available stores in registry:" << std::endl;
-                for (const auto & [storeName, implem] : Implementations::registered()) {
-                    std::cerr << "  Store: '" << storeName << "' Schemes: ";
-                    for (const auto & scheme : implem.uriSchemes) {
-                        std::cerr << "'" << scheme << "' ";
-                    }
-                    std::cerr << std::endl;
-                    std::cerr << "    Contains '" << g.scheme << "'? "
-                              << (implem.uriSchemes.count(g.scheme) ? "YES" : "NO") << std::endl;
-                }
-
                 throw Error("don't know how to open Nix store with MEOW '%s'", g.scheme);
             },
         },
@@ -97,27 +79,11 @@ std::list<ref<Store>> getDefaultSubstituters()
             if (!done.insert(uri).second)
                 return;
             try {
-                if (std::getenv("NIX_GCS_DEBUG")) {
-                    std::cerr << "=== getDefaultSubstituters: trying to open store '" << uri << "' ===" << std::endl;
-                }
                 stores.push_back(openStore(uri));
-                if (std::getenv("NIX_GCS_DEBUG")) {
-                    std::cerr << "=== Successfully opened store '" << uri << "' ===" << std::endl;
-                }
             } catch (Error & e) {
-                if (std::getenv("NIX_GCS_DEBUG")) {
-                    std::cerr << "=== Failed to open store '" << uri << "': " << e.what() << " ===" << std::endl;
-                }
                 logWarning(e.info());
             }
         };
-
-        if (std::getenv("NIX_GCS_DEBUG")) {
-            std::cerr << "=== getDefaultSubstituters: processing substituters ===" << std::endl;
-            for (const auto & uri : settings.substituters.get()) {
-                std::cerr << "  Substituter URI: '" << uri << "'" << std::endl;
-            }
-        }
 
         for (const auto & uri : settings.substituters.get())
             addStore(uri);
