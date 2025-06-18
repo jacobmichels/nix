@@ -75,7 +75,7 @@ ref<StoreConfig> resolveStoreConfig(StoreReference && storeURI)
                               << (implem.uriSchemes.count(g.scheme) ? "YES" : "NO") << std::endl;
                 }
 
-                throw Error("don't know how to open Nix store with scheme '%s'", g.scheme);
+                throw Error("don't know how to open Nix store with MEOW '%s'", g.scheme);
             },
         },
         storeURI.variant);
