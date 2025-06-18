@@ -1,4 +1,6 @@
 #include "nix/store/gcs-binary-cache-store.hh"
+#include "nix/store/globals.hh"
+#include "nix/store/store-registration.hh"
 #include <google/cloud/storage/client.h>
 
 namespace gcs = ::google::cloud::storage;
@@ -78,5 +80,7 @@ ref<Store> GCSBinaryCacheStoreConfig::openStore() const
     return make_ref<GCSBinaryCacheStoreImpl>(
         ref<GCSBinaryCacheStoreConfig>(const_cast<GCSBinaryCacheStoreConfig *>(this)->shared_from_this()));
 }
+
+static RegisterStoreImplementation<GCSBinaryCacheStoreImpl::Config> regGcsBinaryCacheStore;
 
 };
