@@ -24,9 +24,15 @@ struct GCSBinaryCacheStoreConfig : std::enable_shared_from_this<GCSBinaryCacheSt
     {
         return "GCS Binary Cache Store";
     }
+
     static StringSet uriSchemes()
     {
         return {"gs"};
+    }
+
+    static std::optional<ExperimentalFeature> experimentalFeature()
+    {
+        return std::nullopt;
     }
     static std::string doc();
     ref<Store> openStore() const override;
