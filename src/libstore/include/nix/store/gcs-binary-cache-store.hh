@@ -4,11 +4,12 @@
 
 namespace nix {
 
-struct GCSBinaryCacheStoreConfig : virtual BinaryCacheStoreConfig
+struct GCSBinaryCacheStoreConfig : std::enable_shared_from_this<GCSBinaryCacheStoreConfig>,
+                                   virtual BinaryCacheStoreConfig
 {
     std::string bucketName;
 
-    GCSBinaryCacheStoreConfig(std::string_view uriScheme, std::string_view bucketName, const Params & params);
+    GCSBinaryCacheStoreConfig(std::string_view bucketName, const Params & params);
 
     const Setting<std::string> project{this, "", "project", "GCS project ID"};
 
