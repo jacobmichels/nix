@@ -34,6 +34,7 @@ headers = [config_pub_h] + files(
   'downstream-placeholder.hh',
   'filetransfer.hh',
   'gc-store.hh',
+  'gcs-binary-cache-store.hh',
   'globals.hh',
   'http-binary-cache-store.hh',
   'indirect-root-store.hh',

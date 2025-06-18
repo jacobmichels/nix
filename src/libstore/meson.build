@@ -145,6 +145,9 @@ if aws_s3.found()
 endif
 deps_other += aws_s3
 
+gcs = dependency('google_cloud_cpp_storage')
+deps_other += gcs
+
 subdir('nix-meson-build-support/generate-header')
 
 generated_headers = []
@@ -277,6 +280,7 @@ sources = files(
   'export-import.cc',
   'filetransfer.cc',
   'gc.cc',
+  'gcs-binary-cache-store.cc',
   'globals.cc',
   'http-binary-cache-store.cc',
   'indirect-root-store.cc',

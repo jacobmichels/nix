@@ -13,6 +13,9 @@
   libseccomp,
   nlohmann_json,
   sqlite,
+  google-cloud-cpp,
+  abseil-cpp,
+  crc32c,
 
   busybox-sandbox-shell ? null,
 
@@ -63,6 +66,9 @@ mkMesonLibrary (finalAttrs: {
       boost
       curl
       sqlite
+      google-cloud-cpp
+      abseil-cpp
+      crc32c
     ]
     ++ lib.optional stdenv.hostPlatform.isLinux libseccomp
     # There have been issues building these dependencies
