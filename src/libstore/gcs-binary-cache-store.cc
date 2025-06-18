@@ -113,4 +113,16 @@ ref<Store> GCSBinaryCacheStoreConfig::openStore() const
 
 static RegisterStoreImplementation<GCSBinaryCacheStoreImpl::Config> regGcsBinaryCacheStore;
 
+static bool __attribute__((unused)) _debug_registration = []() {
+    std::cerr << "GCS store: checking registered implementations..." << std::endl;
+    for (const auto & [storeName, implem] : nix::Implementations::registered()) {
+        std::cerr << "  Store: " << storeName << " Schemes: ";
+        for (const auto & scheme : implem.uriSchemes) {
+            std::cerr << scheme << " ";
+        }
+        std::cerr << std::endl;
+    }
+    return true;
+}();
+
 };
