@@ -196,4 +196,6 @@ in
   fetchurl = runNixOSTestFor "x86_64-linux" ./fetchurl.nix;
 
   chrootStore = runNixOSTestFor "x86_64-linux" ./chroot-store.nix;
+
+  gcs-binary-cache-store = runNixOSTestFor "x86_64-linux" ./gcs-binary-cache-store.nix;
 }
